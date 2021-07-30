@@ -2,9 +2,10 @@ import hmac
 import sqlite3
 import datetime
 
+import CORS as CORS
 from flask import Flask, request, jsonify
 from flask_jwt import JWT, jwt_required, current_identity
-
+from flask_cors import
 
 class User(object):
     def __init__(self, id, username, password):
@@ -69,6 +70,7 @@ def identity(payload):
 
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 app.config['SECRET_KEY'] = 'super-secret'
 
@@ -78,6 +80,7 @@ jwt = JWT(app, authenticate, identity)
 @jwt_required()
 def protected():
     return '%s' % current_identity
+
 
 @app.route('/user-registration/', methods=["POST"])
 def user_registration():
@@ -121,7 +124,7 @@ def create_blog():
                            "date_created) VALUES(?, ?, ?)", (title, content, date_created))
             conn.commit()
             response["status_code"] = 201
-            response['description'] = "Blog post added succesfully"
+            response['description'] = "Blog post added successfully"
         return response
 
 
